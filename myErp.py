@@ -1,5 +1,19 @@
+import sqlite3
+import datetime
+
+#----- DATABASE -----#
+DBconnection = sqlite3.connect("myErp.db")
+DBcursor = DBconnection.cursor()
+
+DBcursor.execute("CREATE TABLE IF NOT EXISTS USERS(id INTEGER PRIMARY KEY AUTOINCREMENT, lastname TEXT, firstname TEXT, role TEXT, username TEXT UNIQUE, password TEXT)")
+DBcursor.execute("CREATE TABLE IF NOT EXISTS STOCK(code TEXT PRIMARY KEY, nametag TEXT, price REAL, quantity INTEGER)")
+DBcursor.execute("CREATE TABLE IF NOT EXISTS TASKS(tasknum INTEGER PRIMARY KEY AUTOINCREMENT, subject TEXT, operator TEXT, client TEXT, date TEXT)")
+DBcursor.execute("CREATE TABLE IF NOT EXISTS FINISHED_TASKS(tasknum INTEGER, subject TEXT, operator TEXT, client TEXT, date TEXT, finished_date TEXT)")
+DBcursor.commit()
+
+
 #----- STOCK -----#
-product ={}
+product={}
 
 def addProduct(): #DONE
     code=input("Product's code: ")
@@ -55,7 +69,7 @@ def showTasks():
 def endTask():
     taskID = int(input("Input task ID you want to mark as completed: "))
     if taskID in tasks:
-        #TODO MOVE TO COMPLETED
+        #TODO MOVE TO finishedTasksDB
         del tasks[taskID]
     else:
         print(f"Task {taskID} does not exist")
@@ -76,7 +90,7 @@ def login():
 def addUser():
     user = input("User's name: ")
     passwd = input("User's password: ")
-
+    #USER ROLES 'Technician', 'Accountant', 'Chief Officer', 'Other'
     #register info
 
 
@@ -148,3 +162,5 @@ def tasksMenu():
 
 if __name__ == "__main__":
     main()
+
+DBconnection.close()
